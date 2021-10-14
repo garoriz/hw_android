@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorkForFirstSem">
         <activity
+            android:name=".MainActivity2"
+            android:exported="true">
+        <intent-filter>
+            <category android:name="android.intent.category.DEFAULT"/>
+            <action android:name="android.intent.action.SEND"/>
+            <data android:mimeType="text/plain"/>
+        </intent-filter>
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
