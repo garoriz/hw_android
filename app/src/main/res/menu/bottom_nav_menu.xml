@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_text_view"
+        android:icon="@drawable/ic_baseline_short_text_24"
+        android:title="Text" />
+
+    <item
+        android:id="@+id/navigation_list_titles"
+        android:icon="@drawable/ic_baseline_list_24"
+        android:title="Titles" />
+
+    <item
+        android:id="@+id/navigation_list_card_views"
+        android:icon="@drawable/ic_baseline_view_list_24"
+        android:title="Card views" />
+</menu>
