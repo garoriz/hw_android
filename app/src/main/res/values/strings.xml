@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Work for first sem</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="notification_music_player">Музыкальный плеер</string>
 </resources>
