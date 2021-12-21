@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Work for first sem</string>
+    <string name="welcome_text_view">Для начала работы создайте первую цель</string>
+    <string name="title">Название</string>
+    <string name="desc">Описание</string>
+    <string name="save">Сохранить</string>
 </resources>
