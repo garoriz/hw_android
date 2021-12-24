@@ -9,7 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workforfirstsem.adapter.TodoListAdapter
 import com.example.workforfirstsem.model.AppDatabase
+import com.example.workforfirstsem.model.entity.Todo
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.*
 
 
 class ListTodoFragment : Fragment(R.layout.fragment_list_todo) {
@@ -18,37 +20,48 @@ class ListTodoFragment : Fragment(R.layout.fragment_list_todo) {
 
     private lateinit var db: AppDatabase
 
+    private lateinit var scope: CoroutineScope
+
+    private lateinit var todos: MutableList<Todo>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         db = AppDatabase(requireContext())
 
-        val todos = db.todoDao().getAll() as MutableList
+        scope = CoroutineScope(Dispatchers.Main + Job())
 
-        todoListAdapter = TodoListAdapter({
-            showEditFragment(it)
-            todoListAdapter?.submitList(todos)
-        }, {
-            deleteTodo(it)
-            todoListAdapter?.submitList(todos)
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.container, ListTodoFragment())
-                ?.commit()
-        })
+        scope.launch {
+            todos = db.todoDao().getAll() as MutableList<Todo>
 
-        with(view) {
-            findViewById<RecyclerView>(R.id.todos).run {
-                adapter = todoListAdapter
+            todoListAdapter = TodoListAdapter({
+                showEditFragment(it)
+                todoListAdapter?.submitList(todos)
+            }, {
+                scope.launch {
+                    deleteTodo(it)
+                    todos = db.todoDao().getAll() as MutableList<Todo>
+                    todoListAdapter?.submitList(todos)
+                    if (todos.isEmpty()) {
+                        view.findViewById<TextView>(R.id.textView).visibility = View.VISIBLE
+                    }
+                }
+            })
+
+            with(view) {
+                findViewById<RecyclerView>(R.id.todos).run {
+                    adapter = todoListAdapter
+                }
+                findViewById<FloatingActionButton>(R.id.add_todo).setOnClickListener {
+                    showBlankEditFragment()
+                }
             }
-            findViewById<FloatingActionButton>(R.id.add_todo).setOnClickListener {
-                showBlankEditFragment()
-            }
+
+            if (todos.size > 0)
+                todoListAdapter?.submitList(todos)
+            else
+                view.findViewById<TextView>(R.id.textView).visibility = View.VISIBLE
         }
-
-        if (todos.size > 0)
-            todoListAdapter?.submitList(todos)
-        else
-            view.findViewById<TextView>(R.id.textView).visibility = View.VISIBLE
     }
 
     private fun showEditFragment(id: Int) {
@@ -58,6 +71,7 @@ class ListTodoFragment : Fragment(R.layout.fragment_list_todo) {
         editTodoFragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, editTodoFragment)
+            ?.addToBackStack("edit_todo")
             ?.commit()
     }
 
@@ -65,11 +79,17 @@ class ListTodoFragment : Fragment(R.layout.fragment_list_todo) {
         val editTodoFragment = EditTodoFragment()
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, editTodoFragment)
+            ?.addToBackStack("edit_todo")
             ?.commit()
     }
 
-    private fun deleteTodo(id: Int) {
+    private suspend fun deleteTodo(id: Int) {
         val todo = db.todoDao().getById(id)
         db.todoDao().delete(todo)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scope.cancel()
     }
 }

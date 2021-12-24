@@ -9,6 +9,7 @@ import androidx.room.Room
 import com.example.workforfirstsem.databinding.ActivityMainBinding
 import com.example.workforfirstsem.model.AppDatabase
 import com.example.workforfirstsem.model.entity.Todo
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private val listTodoFragment = ListTodoFragment()
 
     private lateinit var db: AppDatabase
+
+    private lateinit var scope: CoroutineScope
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +30,15 @@ class MainActivity : AppCompatActivity() {
 
         db = AppDatabase(this)
 
+        scope = CoroutineScope(Dispatchers.Main + Job())
+
         with(binding) {
             btnDeleteAll.setOnClickListener {
-                db.todoDao().deleteAll()
+                scope.launch {
+                    db.todoDao().deleteAll()
+                }
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, listTodoFragment)
+                    .replace(R.id.container, ListTodoFragment())
                     .commit()
             }
         }
@@ -41,13 +48,8 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onBackPressed() {
-        if (listTodoFragment.isResumed)
-            super.onBackPressed()
-        else
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, listTodoFragment)
-                .commit()
-
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
     }
 }
