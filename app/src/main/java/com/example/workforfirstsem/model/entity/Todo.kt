@@ -13,5 +13,5 @@ data class Todo(
     @ColumnInfo(name = "description")
     val desc: String?
 ) {
-    constructor(title: String?, desc: String?) : this (0, title, desc)
+    constructor(title: String?, desc: String?) : this(0, title, desc)
 }

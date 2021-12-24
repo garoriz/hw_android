@@ -1,13 +1,8 @@
 package com.example.workforfirstsem
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.example.workforfirstsem.adapter.TodoListAdapter
+import androidx.fragment.app.Fragment
 import com.example.workforfirstsem.databinding.FragmentEditTodoBinding
 import com.example.workforfirstsem.model.AppDatabase
 import com.example.workforfirstsem.model.entity.Todo
@@ -51,7 +46,7 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
         }
     }
 
-    fun save(view: View) {
+    private fun save(view: View) {
         with(binding) {
             val title = etTitle.editText?.text.toString()
             val desc = etDesc.editText?.text.toString()
@@ -71,7 +66,7 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
         }
     }
 
-    fun update(view: View, id: Int) {
+    private fun update(view: View, id: Int) {
         with(binding) {
             val title = etTitle.editText?.text.toString()
             val desc = etDesc.editText?.text.toString()

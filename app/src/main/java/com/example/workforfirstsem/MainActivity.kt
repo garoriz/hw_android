@@ -1,14 +1,9 @@
 package com.example.workforfirstsem
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import androidx.room.Room
+import androidx.appcompat.app.AppCompatActivity
 import com.example.workforfirstsem.databinding.ActivityMainBinding
 import com.example.workforfirstsem.model.AppDatabase
-import com.example.workforfirstsem.model.entity.Todo
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {

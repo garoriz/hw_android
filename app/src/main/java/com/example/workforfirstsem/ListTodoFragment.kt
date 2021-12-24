@@ -1,11 +1,9 @@
 package com.example.workforfirstsem
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workforfirstsem.adapter.TodoListAdapter
 import com.example.workforfirstsem.model.AppDatabase
