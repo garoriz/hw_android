@@ -19,6 +19,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.*
 import java.util.*
 
 class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
@@ -33,6 +34,8 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
 
     private val permissionId = 42
 
+    private lateinit var scope: CoroutineScope
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,6 +44,8 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
         db = AppDatabase(requireContext())
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        scope = CoroutineScope(Dispatchers.Main + Job())
 
         with(binding) {
             editTextDate.setOnClickListener {
@@ -52,17 +57,19 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
             setLongitudeAndLatitude()
             val id = arguments?.getInt("id")
             if (id != null) {
-                val todo = db.todoDao().getById(id)
-                etTitle.editText?.setText(todo.title)
-                etDesc.editText?.setText(todo.desc)
-                if (todo.date != null) {
-                    setInitialDate(todo.date.time)
-                }
-                if (todo.latitude != "") {
-                    etLatitude.editText?.setText(todo.latitude)
-                }
-                if (todo.longitude != "") {
-                    etLongitude.editText?.setText(todo.longitude)
+                scope.launch {
+                    val todo = db.todoDao().getById(id)
+                    etTitle.editText?.setText(todo.title)
+                    etDesc.editText?.setText(todo.desc)
+                    if (todo.date != null) {
+                        setInitialDate(todo.date.time)
+                    }
+                    if (todo.latitude != "") {
+                        etLatitude.editText?.setText(todo.latitude)
+                    }
+                    if (todo.longitude != "") {
+                        etLongitude.editText?.setText(todo.longitude)
+                    }
                 }
                 btnSave.setOnClickListener {
                     update(view, id)
@@ -143,15 +150,17 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
                     LENGTH_LONG
                 ).show()
             } else {
-                db.todoDao().save(
-                    Todo(
-                        title,
-                        desc,
-                        date,
-                        latitude,
-                        longitude
+                scope.launch {
+                    db.todoDao().save(
+                        Todo(
+                            title,
+                            desc,
+                            date,
+                            latitude,
+                            longitude
+                        )
                     )
-                )
+                }
                 activity?.supportFragmentManager?.popBackStack()
             }
         }
@@ -180,9 +189,11 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
                     LENGTH_LONG
                 ).show()
             } else {
-                db.todoDao().update(
-                    Todo(id, title, desc, date, latitude, longitude)
-                )
+                scope.launch {
+                    db.todoDao().update(
+                        Todo(id, title, desc, date, latitude, longitude)
+                    )
+                }
                 activity?.supportFragmentManager?.popBackStack()
             }
         }
@@ -217,5 +228,10 @@ class EditTodoFragment : Fragment(R.layout.fragment_edit_todo) {
                 )
             )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        scope.cancel()
     }
 }

@@ -7,20 +7,20 @@ import com.example.workforfirstsem.model.entity.Todo
 interface TodoDao {
 
     @Query("SELECT * FROM todo")
-    fun getAll(): List<Todo>
+    suspend fun getAll(): List<Todo>
 
     @Query("SELECT * FROM todo WHERE id = :id")
-    fun getById(id: Int): Todo
+    suspend fun getById(id: Int): Todo
 
     @Insert
-    fun save(todo: Todo)
+    suspend fun save(todo: Todo)
 
     @Update
-    fun update(todo: Todo)
+    suspend fun update(todo: Todo)
 
     @Query("DELETE FROM todo")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Delete
-    fun delete(todo: Todo)
+    suspend fun delete(todo: Todo)
 }
