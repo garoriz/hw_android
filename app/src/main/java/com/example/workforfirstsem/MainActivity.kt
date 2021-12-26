@@ -1,20 +1,13 @@
 package com.example.workforfirstsem
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import androidx.room.Room
+import androidx.appcompat.app.AppCompatActivity
 import com.example.workforfirstsem.databinding.ActivityMainBinding
 import com.example.workforfirstsem.model.AppDatabase
-import com.example.workforfirstsem.model.entity.Todo
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private val listTodoFragment = ListTodoFragment()
 
     private lateinit var db: AppDatabase
 
@@ -31,23 +24,13 @@ class MainActivity : AppCompatActivity() {
             btnDeleteAll.setOnClickListener {
                 db.todoDao().deleteAll()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, listTodoFragment)
+                    .replace(R.id.container, ListTodoFragment())
                     .commit()
             }
         }
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.container, listTodoFragment)
+            .add(R.id.container, ListTodoFragment())
             .commit()
-    }
-
-    override fun onBackPressed() {
-        if (listTodoFragment.isResumed)
-            super.onBackPressed()
-        else
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, listTodoFragment)
-                .commit()
-
     }
 }

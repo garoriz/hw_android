@@ -4,4 +4,17 @@
     <string name="title">Название</string>
     <string name="desc">Описание</string>
     <string name="save">Сохранить</string>
+    <string name="date">Дата</string>
+    <string name="delete_date">Удалить дату</string>
+    <string name="longitude">Долгота</string>
+    <string name="latitude">Широта</string>
+    <string name="tv_longitude">Долгота: </string>
+    <string name="tv_latitude">Широта: </string>
+    <string name="blank_title_desc">Название и описание не могут быть пустыми</string>
+    <string name="null_location">Не удалось получить местоположение</string>
+    <string name="permission">Разрешение</string>
+    <string name="needed_permission">
+        Для автоматического вычисления местоположения нужно разрешение</string>
+    <string name="ok">OK</string>
+    <string name="no">Нет</string>
 </resources>

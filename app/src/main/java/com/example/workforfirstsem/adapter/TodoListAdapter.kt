@@ -7,8 +7,8 @@ import com.example.workforfirstsem.model.AppDatabase
 import com.example.workforfirstsem.model.entity.Todo
 
 class TodoListAdapter(
-    private val action : (Int) -> Unit,
-    private val delete : (Int) -> Unit,
+    private val action: (Int) -> Unit,
+    private val delete: (Int) -> Unit,
 ) : ListAdapter<Todo, TodoHolder>(TodoDiffItemCallback()) {
 
     override fun onCreateViewHolder(

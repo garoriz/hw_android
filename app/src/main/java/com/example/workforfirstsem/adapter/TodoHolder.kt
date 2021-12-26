@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.workforfirstsem.R
 import com.example.workforfirstsem.databinding.ItemTodoBinding
 import com.example.workforfirstsem.model.entity.Todo
+import java.text.SimpleDateFormat
 
 class TodoHolder(
     private val binding: ItemTodoBinding,
@@ -30,6 +31,11 @@ class TodoHolder(
         with(binding) {
             tvTitle.text = item.title
             tvDesc.text = item.desc
+            if (item.date != null) {
+                tvDate.text = SimpleDateFormat("dd-MM-yyyy").format(item.date)
+            }
+            tvLatitudeVal.text = item.latitude
+            tvLongitudeVal.text = item.longitude
         }
     }
 

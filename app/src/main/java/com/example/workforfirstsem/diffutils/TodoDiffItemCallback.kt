@@ -3,7 +3,7 @@ package com.example.workforfirstsem.diffutils
 import androidx.recyclerview.widget.DiffUtil
 import com.example.workforfirstsem.model.entity.Todo
 
-class TodoDiffItemCallback  : DiffUtil.ItemCallback<Todo>() {
+class TodoDiffItemCallback : DiffUtil.ItemCallback<Todo>() {
 
     override fun areItemsTheSame(
         oldItem: Todo,

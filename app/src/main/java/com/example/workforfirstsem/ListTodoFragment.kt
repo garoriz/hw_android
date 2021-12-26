@@ -1,14 +1,13 @@
 package com.example.workforfirstsem
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workforfirstsem.adapter.TodoListAdapter
 import com.example.workforfirstsem.model.AppDatabase
+import com.example.workforfirstsem.model.entity.Todo
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -23,17 +22,18 @@ class ListTodoFragment : Fragment(R.layout.fragment_list_todo) {
 
         db = AppDatabase(requireContext())
 
-        val todos = db.todoDao().getAll() as MutableList
+        var todos = db.todoDao().getAll() as MutableList
 
         todoListAdapter = TodoListAdapter({
             showEditFragment(it)
             todoListAdapter?.submitList(todos)
         }, {
             deleteTodo(it)
+            todos = db.todoDao().getAll() as MutableList<Todo>
             todoListAdapter?.submitList(todos)
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.container, ListTodoFragment())
-                ?.commit()
+            if (todos.isEmpty()) {
+                view.findViewById<TextView>(R.id.textView).visibility = View.VISIBLE
+            }
         })
 
         with(view) {
@@ -58,6 +58,7 @@ class ListTodoFragment : Fragment(R.layout.fragment_list_todo) {
         editTodoFragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, editTodoFragment)
+            ?.addToBackStack("edit_todo")
             ?.commit()
     }
 
@@ -65,6 +66,7 @@ class ListTodoFragment : Fragment(R.layout.fragment_list_todo) {
         val editTodoFragment = EditTodoFragment()
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.container, editTodoFragment)
+            ?.addToBackStack("edit_todo")
             ?.commit()
     }
 
